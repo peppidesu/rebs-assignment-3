@@ -6,8 +6,7 @@
 - Hjalte Tromborg (vfr574)
 
 ## How to run
-### Build from source
-### Prebuilt binaries
-Alternatively download the prebuilt binaries for your system from the [latest release page](https://github.com/peppidesu/rebs-assignment-2/releases/latest).
+On linux, you can run `run.sh` to start all endpoints in the correct order and
+display their outputs in one terminal.
 
-## Usage
+Otherwise, make sure to run `buyer.py` last.
