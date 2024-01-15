@@ -27,6 +27,7 @@ class FromShipper(InputPort):
 
 from_shipper = FromShipper()
 from_seller = FromSeller()
+
 to_sellers = {
     "seller1": ToSeller(("localhost", 8100)),
     "seller2": ToSeller(("localhost", 8110)),

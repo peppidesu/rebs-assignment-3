@@ -8,7 +8,7 @@ class OutputPort:
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)        
     
     def send(self, id: str, *data):
-        print(f"{self.name}: Sending {id}({list(data)}) to {self.address}")
+        print(f"{self.name}\t: Sending {id}({list(data)}) >>>> {self.address}")
         contents = id.encode() + b'\x00' + b'\x00'.join([str(d).encode() for d in data])
         self.socket.sendto(contents, self.address)
         
@@ -33,7 +33,7 @@ class InputPort:
         data, _ = self.socket.recvfrom(1024)
         fields = data.split(b'\x00')
         id = fields[0].decode()
-        print(f"{self.name}: Received {id}({fields[1:]})")
+        print(f"{self.name}\t: Received {id}({fields[1:]}) <<<< {self.address}")
         self.callbacks[id](*[f.decode() for f in fields[1:]])
     
     def close(self):
