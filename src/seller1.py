@@ -33,7 +33,7 @@ to_shipper = ToShipper()
 
 def from_buyer_ask_callback(product, *_):    
     if product == "chips":
-        to_buyer.quote(15)
+        to_buyer.quote(24)
         from_buyer.accept(from_buyer_accept_callback)
         from_buyer.reject(from_buyer_reject_callback)
         from_buyer.recv() 
