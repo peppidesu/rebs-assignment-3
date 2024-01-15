@@ -1,5 +1,7 @@
 from util import *
 
+SELLER_PRICE = 17
+
 class FromBuyer(InputPort):
     def __init__(self):
         InputPort.__init__(self, "seller2", ('localhost', 8110))
@@ -33,7 +35,7 @@ to_shipper = ToShipper()
 
 def from_buyer_ask_callback(product, *_):   
     if product == "chips":
-        to_buyer.quote(17)
+        to_buyer.quote(SELLER_PRICE)
         from_buyer.accept(from_buyer_accept_callback)
         from_buyer.reject(from_buyer_reject_callback)
         from_buyer.recv() 
