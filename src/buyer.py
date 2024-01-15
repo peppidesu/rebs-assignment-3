@@ -1,8 +1,8 @@
 from util import *
 
 class ToSeller(OutputPort):
-    def __init__(self, seller_id):
-        OutputPort.__init__(self, f'buyer>{seller_id}')
+    def __init__(self, address):
+        OutputPort.__init__(self, "buyer", address)
     
     def ask(self, product):
         self.send("ask", product)
@@ -13,14 +13,14 @@ class ToSeller(OutputPort):
     
 class FromSeller(InputPort):
     def __init__(self):
-        InputPort.__init__(self, 'seller>buyer')
+        InputPort.__init__(self, "buyer", ('localhost', 8000))
     
     def quote(self, fn):
         self.set_callback("quote", fn)
 
 class FromShipper(InputPort):
     def __init__(self):
-        InputPort.__init__(self, 'shipper>buyer')
+        InputPort.__init__(self, "buyer", ('localhost', 8001))
     
     def details(self, fn):
         self.set_callback("details", fn)
@@ -28,23 +28,24 @@ class FromShipper(InputPort):
 from_shipper = FromShipper()
 from_seller = FromSeller()
 to_sellers = {
-    "seller1": ToSeller("seller1"),
-    "seller2": ToSeller("seller2"),
+    "seller1": ToSeller(("localhost", 8100)),
+    "seller2": ToSeller(("localhost", 8110)),
 }
 
 best_seller = None
-def from_seller_quote_callback(seller_id, price, *args):
+
+@net_type_convert(str, int)
+def from_seller_quote_callback(seller_id, price, *_):
     global best_seller
-    price_int = int(price)
-    if price_int < 20 and (best_seller is None or price_int < best_seller[0]):
+    if price < 20 and (best_seller is None or price < best_seller[0]):
         old_best = best_seller
-        best_seller = (price_int, seller_id)
+        best_seller = (price, seller_id)
         if old_best is not None:
             to_sellers[old_best[1]].reject(f"Better price from {seller_id}")
     else:
         to_sellers[seller_id].reject(f"Not ok to buy chips for {price}")
 
-def from_shipper_details_callback(invoice, *args):
+def from_shipper_details_callback(invoice, *_):
     print(f"Received {invoice} from shipper!")
 
 for seller in to_sellers.values():
